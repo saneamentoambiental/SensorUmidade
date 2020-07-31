@@ -7,7 +7,7 @@
 #include <Ubidots.h>
 #include <IotWebConf.h>
 #include <timeUtils.h>
-//#include <sensorUmidade.h>
+#include <SensorUmidade.h>
 
 
 #define STRING_LEN 128
@@ -189,5 +189,7 @@ void handleRoot()
 float obterValorUmidade(byte sensorNro){
 	return millis();
 }
+
+
 
 #endif // _MEU_MAIN_H_

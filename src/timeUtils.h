@@ -16,7 +16,7 @@ char* formatarDataHora(time_t t){
 	struct tm *lt = localtime(&t);
 
 	char str[32];
-	Serial.println("Hora Formatada:");
+	Serial.print("Hora Formatada: ");
 	strftime(str, sizeof str, "%Y-%m-%d %H:%M:%S", lt); 
 	Serial.println(str);
 	return str;

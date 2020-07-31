@@ -135,17 +135,31 @@ void setupUbidots(){
 }
 bool sendUbidots(){
 	int success = 0;
-	for(int i =0; i < qtdSensores; i++ ){
+	for(int i =1; i <= qtdSensores; i++ ){
 		char sensor[20];
-		sprintf(sensor,"Sensor %d", (i+1));
+		sprintf(sensor,"Sensor %d", (i));
+
+		SensorUmidadeResult resultado;
+		obterValorUmidade(i, &resultado);
+		if ( resultado.status == SensorUmidade_status_t::ERROR){
+			Serial.println("Sensor lido com erro.");
+			Serial.printf("%s = %s [\n%c\n]\n", &sensor, resultado.status, resultado.msgError);
+			Serial.println(resultado.msgError);
+			continue;
+			//ubidots->add(sensor, resultado.value);
+		}
+		Serial.println("Sensor lido com Sucesso.");		
+		Serial.printf("%s = %f [%d]\n", &sensor, resultado.value, resultado.status);
 		ubidots->add(sensor, obterValorUmidade(i));
 		delay(50);
-		
 	
 	//printStatusUbidots();
 	
-		if ( ubidots->wifiConnected() && ubidots->send(iotWebConf.getThingName())){
-			success++;
+		if ( ubidots->wifiConnected() ){
+			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()) )
+			{
+				success++;
+			}
 		}
 	}
 	if( success == qtdSensores ){
@@ -153,9 +167,7 @@ bool sendUbidots(){
 		ultimoEnvio = millis()/1000;
 		return true;
 	} else{
-		
-		Serial.print(qtdSensores-success);
-		Serial.println(" Ubidots error(s)!");
+		Serial.printf("Ubidots error(s): \n- %d dos %d foram enviados.", success, qtdSensores);
 		return false;
 	}
 }
@@ -188,16 +200,16 @@ bool sendUbidots1(){
 	}
 }
 
+void setupSensores(){
+	SensorUmidadeSetup( 0, A0, VersaoDEMO);
+}
 
 void setup() 
 {
 	Serial.begin(9600);
 	Serial.println();
 	Serial.println("Starting up...");
-	if(EhDebug)
-	{
-		
-	}
+
 
 	setupIotWebConf();
 
@@ -215,7 +227,9 @@ void setup()
 	{
 		debugMsg("Conectado!");
 		setupDateTime();
+		sincronizarRelogio();
 	}
+	setupSensores();
 	Serial.println("Ready.");
 }
 

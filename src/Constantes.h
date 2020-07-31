@@ -2,6 +2,8 @@
 #define _Constantes_H_
 
 const bool EhDebug = true;
+const bool EhParaEnviarAoServidor = false;
+const bool VersaoDEMO = true;
 const bool FormatHD = false;
 const bool ResetWIFI = false;
 const unsigned int TimeDelay = 5000;
