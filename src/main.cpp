@@ -91,7 +91,7 @@ void setupIotWebConf(){
 	itoa(timeUbidots, timeUbidotsValue, 10);
 	itoa(qtdSensores, qtdSensoresValue, 10);
 
-	iotWebConf.setStatusPin(LED_BUILTIN);
+	//iotWebConf.setStatusPin(LED_BUILTIN);
 
 	iotWebConf.addParameter(&separatorUbidots);
 	iotWebConf.addParameter(&tokenUbidotsParam);
@@ -175,34 +175,6 @@ bool sendUbidots(){
 		return false;
 	}
 }
-bool sendUbidots1(){
-	if ( WiFi.isConnected()){
-		for(int i =0; i < qtdSensores; i++ )
-		{
-			
-			float v = obterValorUmidade(i);
-
-			char sensor[20];
-			sprintf(sensor,"Sensor %i", i);
-			ubidots->add(sensor,v);
-			
-			//ubidots->add(s.c_str(), v);			
-			Serial.print(sensor); Serial.print(" = "); Serial.print(v);
-
-			//printStatusUbidots();
-		
-			if (ubidots->send(iotWebConf.getThingName()))
-			{
-				Serial.println("Ubidots updated.");
-				ultimoEnvio = millis()/1000;
-				return true;
-			}
-		}
-	} else{		
-		Serial.println("Ubidots error!");
-		return false;
-	}
-}
 
 void setupSensores(){
 	SensorUmidadeInit( 1, A0, VersaoDEMO);
@@ -247,10 +219,10 @@ void loop()
 		debugMsg("Conectado!");		
 		setupUbidots();
 	}
-	if ( WiFi.isConnected()){
-		sendUbidots();
-		delay(5000);
-	}
+	// if ( WiFi.isConnected()){
+	// 	sendUbidots();
+	// 	delay(5000);
+	// }
 	currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
 	if (currentMillis - lastMilles >= (timeUbidots*1000))  //test whether the period has elapsed
 	{
