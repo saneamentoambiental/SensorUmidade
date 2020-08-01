@@ -17,18 +17,19 @@ typedef struct {
 	char* msgError;
 } SensorUmidadeResult;
 
+#define nroSensoresMax 4
 int nroSensores = 0;
-int digitalPinsSensorUmidade[4] = {14,12,13,15};
+int digitalPinsSensorUmidade[] = {14,12,13,15};
 uint8_t analogPin;
 
 
 // Write the state of a group of pins
-void setOff(int pins[], int len) {
-  for (int i = 0; i < 4; i++)
+void setOff() {
+  for (int i = 0; i < nroSensores; i++)
   {
-	  if ( pins[i] > 0 )
+	  if ( digitalPinsSensorUmidade[i] > 0 )
 	  {
-    	digitalWrite(pins[i], LOW);
+		digitalWrite(digitalPinsSensorUmidade[i], LOW);
 		//Serial.printf("SU:: SET PIN[%d] - %d = LOW\n", i, pins[i]);
 	  }
   }
@@ -37,21 +38,21 @@ void setOff(int pins[], int len) {
 }
 
 
-void SensorUmidadeSetupPins(int digitalPins[], int qtdValues){
-	for(int i=0; i< qtdValues && i < 4; i++){
+void _SensorUmidadeSetupPins(int digitalPins[]){
+	for(int i=0; i< nroSensores && i < nroSensoresMax; i++){
 		digitalPinsSensorUmidade[i] = digitalPins[i];
 		
 	}
-	for(int i = qtdValues; 4-qtdValues && i < 4; i++){
+	for(int i = nroSensores; i> 0  && i < nroSensoresMax; i++){
 		digitalPinsSensorUmidade[i] = -1;
 	}
-	for(int i =0; i < 4; i++){
+	for(int i =0; i < nroSensores; i++){
 		if(digitalPinsSensorUmidade[i] >0){
 			pinMode(digitalPinsSensorUmidade[i], OUTPUT);
 		}
 	}
 	pinMode(analogPin, INPUT);
-	setOff(digitalPinsSensorUmidade, 4);	
+	setOff();	
 }
 
 bool SensorUmidadeInit(int qtdSensoresConectados, uint8_t analogPin = A0, bool EhDemo = false)
@@ -62,8 +63,8 @@ bool SensorUmidadeInit(int qtdSensoresConectados, uint8_t analogPin = A0, bool E
 	} else {
 		nroSensores = qtdSensoresConectados;	
 	}
-	Serial.printf(" %d configurados [Modo demonstração].",nroSensores, EhDemo);
-	SensorUmidadeSetupPins(digitalPinsSensorUmidade, 4);
+	Serial.printf(" %d configurados [Modo demonstração: %s].",nroSensores, formatarBool(EhDemo).c_str());
+	_SensorUmidadeSetupPins(digitalPinsSensorUmidade);
 	return true;
 }
 
@@ -86,13 +87,13 @@ void obterValorUmidade(int sensorNro, SensorUmidadeResult *resultado, int in_min
 		}	
 		sensorNro--;
 		//We will use the map function to map the values read on the analog input range from 0 to 1023, and will be remapped to another range from 0 to 100%.
-		setOff(digitalPinsSensorUmidade, nroSensores);		
+		setOff();
 		digitalWrite(digitalPinsSensorUmidade[sensorNro], HIGH);
 		delay(500);
 		float amostra_umid = analogRead(analogPin);
 		resultado->rawValue = amostra_umid;
 		delay(500);
-		setOff(digitalPinsSensorUmidade, nroSensores);
+		setOff();
 		Serial.printf("SU:: Sensor %d [porta %d] = %f\n", sensorNro, digitalPinsSensorUmidade[sensorNro], amostra_umid);
 		resultado->value = map ( amostra_umid, in_min, in_max, 100, 0 );
 		resultado->status = SensorUmidade_status_t::SUCESSO;		

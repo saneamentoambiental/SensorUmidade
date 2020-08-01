@@ -93,6 +93,7 @@ void setupIotWebConf(){
 
 	//iotWebConf.setStatusPin(LED_BUILTIN);
 
+	iotWebConf.getWifiPasswordParameter()->type = "text";
 	iotWebConf.addParameter(&separatorUbidots);
 	iotWebConf.addParameter(&tokenUbidotsParam);
 	iotWebConf.addParameter(&timeUbidotsParam);
@@ -177,7 +178,7 @@ bool sendUbidots(){
 }
 
 void setupSensores(){
-	SensorUmidadeInit( 1, A0, VersaoDEMO);
+	SensorUmidadeInit( qtdSensores, A0, VersaoDEMO);
 }
 
 void setup() 

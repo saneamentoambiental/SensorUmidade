@@ -168,14 +168,24 @@ void handleRoot()
 	s += getMenu();
 	s += "</div><br></div><br></div><div class='container f'><div class='card row f'><br>\
 <div class='container lg'><h4>Valor dos Sensores</h4></div>";
-	for(byte i = 0; i <  qtdSensores; i++){
+	for(byte i = 1; i <=  qtdSensores; i++){
+		SensorUmidadeResult resultado;
+		obterValorUmidade(i, &resultado);
+		
+		
 		s += "<div class='card row'><h3 class='lg'>Sensor ";
-		s += i+1;
-		s += "</h3><p>";
-		s += obterValorUmidade(i);
-		s += "</p><hr><p>";
-		s += obterDescricaoUmidade(i);
-		s += "</div>";
+		s += i;
+		s += "</h3><p background-color='";
+		if(resultado.status == SensorUmidade_status_t::ERROR ){
+			s += "red";
+	 	} else {
+			  s+="black";
+		}
+		s += "'>";
+		s += resultado.value;
+		s += " %</p><hr><h5>(";
+		s += resultado.rawValue;
+		s += ")</h5></div>";
 	}
 
 	s += "</div></div><div class='container f row'><div class='card row f'><br>";
