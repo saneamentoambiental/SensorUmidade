@@ -91,6 +91,8 @@ void setupIotWebConf(){
 	itoa(timeUbidots, timeUbidotsValue, 10);
 	itoa(qtdSensores, qtdSensoresValue, 10);
 
+	iotWebConf.setStatusPin(LED_BUILTIN);
+
 	iotWebConf.addParameter(&separatorUbidots);
 	iotWebConf.addParameter(&tokenUbidotsParam);
 	iotWebConf.addParameter(&timeUbidotsParam);
@@ -135,28 +137,30 @@ void setupUbidots(){
 }
 bool sendUbidots(){
 	int success = 0;
-	for(int i =1; i <= qtdSensores; i++ ){
-		char sensor[20];
-		sprintf(sensor,"Sensor %d", (i));
+	for(int i = 1; i <= qtdSensores; i++ ){
+		char sensor[20], sensorRawValue[20];
+		sprintf(sensor,"Sensor_%d", (i));
+		sprintf(sensorRawValue,"Sensor_%d_Raw", (i));
 
 		SensorUmidadeResult resultado;
 		obterValorUmidade(i, &resultado);
-		if ( resultado.status == SensorUmidade_status_t::ERROR){
-			Serial.println("Sensor lido com erro.");
+		if ( resultado.status == SensorUmidade_status_t::ERROR)
+		{			
 			Serial.printf("%s = %s [\n%c\n]\n", &sensor, resultado.status, resultado.msgError);
 			Serial.println(resultado.msgError);
 			continue;
-			//ubidots->add(sensor, resultado.value);
+		} else {
+			if ( EhParaEnviarAoServidor )
+			{
+				ubidots->add(sensor, resultado.value);
+				ubidots->add(sensorRawValue, resultado.rawValue);
+			}
 		}
-		Serial.println("Sensor lido com Sucesso.");		
 		Serial.printf("%s = %f [%d]\n", &sensor, resultado.value, resultado.status);
-		ubidots->add(sensor, obterValorUmidade(i));
-		delay(50);
 	
-	//printStatusUbidots();
-	
-		if ( ubidots->wifiConnected() ){
-			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()) )
+		if ( ubidots->wifiConnected() )
+		{
+			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()))
 			{
 				success++;
 			}
@@ -201,7 +205,7 @@ bool sendUbidots1(){
 }
 
 void setupSensores(){
-	SensorUmidadeSetup( 0, A0, VersaoDEMO);
+	SensorUmidadeInit( 1, A0, VersaoDEMO);
 }
 
 void setup() 
@@ -242,6 +246,10 @@ void loop()
 		sincronizarRelogio();
 		debugMsg("Conectado!");		
 		setupUbidots();
+	}
+	if ( WiFi.isConnected()){
+		sendUbidots();
+		delay(5000);
 	}
 	currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
 	if (currentMillis - lastMilles >= (timeUbidots*1000))  //test whether the period has elapsed

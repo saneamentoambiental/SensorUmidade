@@ -2,8 +2,8 @@
 #define _Constantes_H_
 
 const bool EhDebug = true;
-const bool EhParaEnviarAoServidor = false;
-const bool VersaoDEMO = true;
+const bool EhParaEnviarAoServidor = true;
+const bool VersaoDEMO = false;
 const bool FormatHD = false;
 const bool ResetWIFI = false;
 const unsigned int TimeDelay = 5000;
@@ -50,7 +50,8 @@ String criarCard(String titulo, String valor)
   }
 
   String getMenu(){
-	String s = "<a href='/'>Home</a> | <a href='config'>Configuração</a> | <a href='ubidots'>Enviar dados</a>";
+	String s = "<a href='/'>Home</a> | <a href='config'>Configuração</a> | <a href='ubidots'>Enviar dados</a> ";
+	s += "| <a href='time'>Atualizar Relógio</a>";
 	return s;
 }
 
