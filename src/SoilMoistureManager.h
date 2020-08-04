@@ -8,7 +8,7 @@
 	#define SoilMoistureManager_MAX_SENSORS 8
 #endif
 
-#define getSizeArray(x)  (sizeof(x) / sizeof((x)[0]))
+//#define getSizeArray(x)  (sizeof(x) / sizeof((x)[0]))
 
 
 class SoilMoistureManager {
@@ -34,14 +34,7 @@ class SoilMoistureManager {
 				SoilMoistureSensor s = SoilMoistureSensor();
 				s.setup(digitalPins[i]);
 				this->sensoresSolo.push_back(s);
-				//sensoresSolo[i] = s;
 			}
-			// Serial.println("For 2");
-			// // delay(2000);
-			// // for(unsigned int i = qtdPins; i < SoilMoistureManager_MAX_SENSORS; i++){
-			// // 	s = new SoilMoistureSensor();
-			// // 	this->sensoresSolo[i] = *s;
-			// // }
 		}
 		std::vector<SoilMoistureSensor> getSensores(){
 			return this->sensoresSolo;
@@ -49,6 +42,18 @@ class SoilMoistureManager {
 		unsigned int getQtdSensors(){
 			return this->qtdSensores;
 		}
+
+		void printStatus(){
+			Serial.printf(":::: Soil Moisture Manager ::::\n");
+			Serial.printf(":: Size: %d\n", this->getQtdSensors());
+			for( unsigned i = 0; i < this->getQtdSensors(); i++){
+				SoilMoistureSensor s =  this->sensoresSolo[i];
+				Serial.printf(":: \t - Sensor pin nro %d has on? %s\n", s.getPowerPin(), s.getStatus());
+			}
+			Serial.printf("::::::::::::::::::::::::::::::\n");
+
+		}
+		
 };
 
 

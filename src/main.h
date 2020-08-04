@@ -7,7 +7,7 @@
 #include <Ubidots.h>
 #include <IotWebConf.h>
 #include <timeUtils.h>
-#include <SensorUmidade.h>
+// #include <SensorUmidade.h>
 #include <SoilMoistureSensor.h>
 #include <SoilMoistureManager.h>
 
@@ -43,6 +43,9 @@ unsigned long lastMilles = millis();
 unsigned long currentMillis;
 Ubidots* ubidots;
 
+
+int digitalPinsSoilMoisture[] = {14,12,13,15};
+SoilMoistureManager *smm;
 
 
 IotWebConf iotWebConf(thingName, &dnsServer, &server, wifiInitialApPassword, CONFIG_VERSION);
@@ -169,23 +172,21 @@ void handleRoot()
 	s += getMenu();
 	s += "</div><br></div><br></div><div class='container f'><div class='card row f'><br>\
 <div class='container lg'><h4>Valor dos Sensores</h4></div>";
-	for(byte i = 1; i <=  qtdSensores; i++){
-		SensorUmidadeResult resultado;
-		obterValorUmidade(i, &resultado);
-		
+	for(byte i = 0; i <  smm->getQtdSensors(); i++){
+		SoilMoistureSensor soil = smm->getSensores()[i];
 		
 		s += "<div class='card row'><h3 class='lg'>Sensor ";
-		s += i;
+		s += (i+1);
 		s += "</h3><p background-color='";
-		if(resultado.status == SensorUmidade_status_t::ERROR ){
-			s += "red";
-	 	} else {
-			  s+="black";
-		}
+		// if(resultado.status == SensorUmidade_status_t::ERROR ){
+		// 	s += "red";
+	 	// } else {
+		// 	  s+="black";
+		// }
 		s += "'>";
-		s += resultado.value;
+		s += soil.getMoistureValue();
 		s += " %</p><hr><h5>(";
-		s += resultado.rawValue;
+		s += soil.getMoistureRawValue();
 		s += ")</h5></div>";
 	}
 

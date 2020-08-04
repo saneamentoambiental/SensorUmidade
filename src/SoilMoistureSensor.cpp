@@ -1,10 +1,12 @@
 #include <SoilMoistureSensor.h>
 
 SoilMoistureSensor::SoilMoistureSensor(){
-	this->status = SoilMoistureSensorStatus::SMSS_UNPLUGED;
+	this->status = SoilMoistureSensorStatus::SMSS_OFF;
+	pinMode(analogPin, INPUT);
+
 }
 
-void SoilMoistureSensor::setup(int powerPin, unsigned int readQtd,unsigned int analogPin){
+void SoilMoistureSensor::setup(int powerPin, unsigned int readQtd, unsigned int analogPin){
 	if ( readQtd < 1 ){
 		readQtd = 1;
 	}
@@ -12,26 +14,25 @@ void SoilMoistureSensor::setup(int powerPin, unsigned int readQtd,unsigned int a
 	this->analogPin = analogPin;
 	this->readQtd = readQtd;
 	this->powerOff();
+	pinMode(this->powerPin, OUTPUT);
+	SoilMoistureSensor();
 }
 
 
-int SoilMoistureSensor::getMoistureRawValue()
+float SoilMoistureSensor::getMoistureRawValue()
 {
-	powerOn();
-	int value = analogRead(this->analogPin);
-	powerOff();
-	return value;	
-}
-
-float SoilMoistureSensor::getMoistureValue(){
 	powerOn();
 	float media = 0;
 	for( unsigned int i = 0; i < this->readQtd; i++ ){
 		media += analogRead(this->analogPin);
-		delayMicroseconds(50);
+		delayMicroseconds(150);
 	}
 	powerOff();
 	return media/this->readQtd;
+}
+
+float SoilMoistureSensor::getMoistureValue(const unsigned int in_min, const unsigned int in_max ){
+	return map(this->getMoistureRawValue(), in_min, in_max, 100, 0);
 	
 }
 SoilMoistureSensorStatus SoilMoistureSensor::getStatus(){

@@ -137,28 +137,20 @@ void setupUbidots(){
 	//printStatusUbidots();
 }
 bool sendUbidots(){
-	int success = 0;
-	for(int i = 1; i <= qtdSensores; i++ ){
+	unsigned success = 0;
+	for (unsigned i = 0 ; i < smm->getQtdSensors(); i++){
 		char sensor[20], sensorRawValue[20];
 		sprintf(sensor,"Sensor_%d", (i));
 		sprintf(sensorRawValue,"Sensor_%d_Raw", (i));
-
-		SensorUmidadeResult resultado;
-		obterValorUmidade(i, &resultado);
-		if ( resultado.status == SensorUmidade_status_t::ERROR)
-		{			
-			Serial.printf("%s = %s [\n%c\n]\n", &sensor, resultado.status, resultado.msgError);
-			Serial.println(resultado.msgError);
-			continue;
-		} else {
-			if ( EhParaEnviarAoServidor )
-			{
-				ubidots->add(sensor, resultado.value);
-				ubidots->add(sensorRawValue, resultado.rawValue);
-			}
-		}
-		Serial.printf("%s = %f [%d]\n", &sensor, resultado.value, resultado.status);
-	
+		SoilMoistureSensor s = smm->getSensores()[i];
+		float value = s.getMoistureValue();
+		float rawValue = s.getMoistureRawValue();
+		if ( EhParaEnviarAoServidor )
+		{
+			ubidots->add(sensor, value);
+			ubidots->add(sensorRawValue, rawValue);
+		} 
+		Serial.printf("%s = %f [%f]\n", &sensor, value, rawValue);
 		if ( ubidots->wifiConnected() )
 		{
 			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()))
@@ -167,7 +159,38 @@ bool sendUbidots(){
 			}
 		}
 	}
-	if( success == qtdSensores ){
+
+	// for(int i = 1; i <= qtdSensores; i++ ){
+	// 	char sensor[20], sensorRawValue[20];
+	// 	sprintf(sensor,"Sensor_%d", (i));
+	// 	sprintf(sensorRawValue,"Sensor_%d_Raw", (i));
+
+
+	// 	SensorUmidadeResult resultado;
+	// 	obterValorUmidade(i, &resultado);
+	// 	if ( resultado.status == SensorUmidade_status_t::ERROR)
+	// 	{			
+	// 		Serial.printf("%s = %s [\n%c\n]\n", &sensor, resultado.status, resultado.msgError);
+	// 		Serial.println(resultado.msgError);
+	// 		continue;
+	// 	} else {
+	// 		if ( EhParaEnviarAoServidor )
+	// 		{
+	// 			ubidots->add(sensor, resultado.value);
+	// 			ubidots->add(sensorRawValue, resultado.rawValue);
+	// 		}
+	// 	}
+	// 	Serial.printf("%s = %f [%d]\n", &sensor, resultado.value, resultado.status);
+	
+	// 	if ( ubidots->wifiConnected() )
+	// 	{
+	// 		if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()))
+	// 		{
+	// 			success++;
+	// 		}
+	// 	}
+	// }
+	if( success == smm->getQtdSensors() ){
 		Serial.println("Ubidots updated.");
 		ultimoEnvio = millis()/1000;
 		return true;
@@ -178,37 +201,19 @@ bool sendUbidots(){
 }
 
 
-int digitalPinsSoilMoisture[] = {14,12};
-SoilMoistureSensor *sensoresSolo[5];
-SoilMoistureManager *smm;
 void setupSensores()
 {	
 	Serial.println("setupSensores");
-	unsigned int sensorsQtd = (sizeof(digitalPinsSoilMoisture)/sizeof(int));
-	smm = new SoilMoistureManager(digitalPinsSoilMoisture, sensorsQtd);
-	Serial.println("Get qtd sensores");
-	Serial.println(smm->getQtdSensors());
-	Serial.println("Get qtd sensores 2");
-	Serial.println(smm->getSensores().size());
-	for( unsigned i = 0; i < smm->getQtdSensors(); i++){
-		Serial.println("Power pin = ");
-		Serial.println(smm->getSensores()[i].getPowerPin());
-	}
-	// for(byte i = 0; i < qtdSensores; i++){
-	// 	SoilMoistureSensor *s = new SoilMoistureSensor();
-	// 	s->setup(digitalPinsSoilMoisture[i]);
-	// 	sensoresSolo[i] = s;
-	// }
-	SensorUmidadeInit( qtdSensores, A0, VersaoDEMO);
+	//unsigned int sensorsQtd = (sizeof(digitalPinsSoilMoisture)/sizeof(int));
+	smm = new SoilMoistureManager(digitalPinsSoilMoisture, qtdSensores);
+	
+	// SensorUmidadeInit( qtdSensores, A0, VersaoDEMO);
 }
 
 void setup() 
 {
 	Serial.begin(9600);
-	Serial.println();
 	Serial.println("Starting up...");
-
-
 	setupIotWebConf();
 
 	// -- Set up required URL handlers on the web server.
