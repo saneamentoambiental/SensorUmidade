@@ -177,7 +177,28 @@ bool sendUbidots(){
 	}
 }
 
-void setupSensores(){
+
+int digitalPinsSoilMoisture[] = {14,12};
+SoilMoistureSensor *sensoresSolo[5];
+SoilMoistureManager *smm;
+void setupSensores()
+{	
+	Serial.println("setupSensores");
+	unsigned int sensorsQtd = (sizeof(digitalPinsSoilMoisture)/sizeof(int));
+	smm = new SoilMoistureManager(digitalPinsSoilMoisture, sensorsQtd);
+	Serial.println("Get qtd sensores");
+	Serial.println(smm->getQtdSensors());
+	Serial.println("Get qtd sensores 2");
+	Serial.println(smm->getSensores().size());
+	for( unsigned i = 0; i < smm->getQtdSensors(); i++){
+		Serial.println("Power pin = ");
+		Serial.println(smm->getSensores()[i].getPowerPin());
+	}
+	// for(byte i = 0; i < qtdSensores; i++){
+	// 	SoilMoistureSensor *s = new SoilMoistureSensor();
+	// 	s->setup(digitalPinsSoilMoisture[i]);
+	// 	sensoresSolo[i] = s;
+	// }
 	SensorUmidadeInit( qtdSensores, A0, VersaoDEMO);
 }
 

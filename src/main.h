@@ -8,7 +8,8 @@
 #include <IotWebConf.h>
 #include <timeUtils.h>
 #include <SensorUmidade.h>
-
+#include <SoilMoistureSensor.h>
+#include <SoilMoistureManager.h>
 
 #define STRING_LEN 128
 #define NUMBER_LEN 32
