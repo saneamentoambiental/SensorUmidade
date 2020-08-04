@@ -44,7 +44,7 @@ unsigned long currentMillis;
 Ubidots* ubidots;
 
 
-int digitalPinsSoilMoisture[] = {14,12,13,15};
+int digitalPinsSoilMoisture[] = {14,12,13,15, 2, 0, 4, 5};
 SoilMoistureManager *smm;
 
 
