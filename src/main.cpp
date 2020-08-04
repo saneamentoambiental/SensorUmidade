@@ -203,11 +203,7 @@ bool sendUbidots(){
 
 void setupSensores()
 {	
-	Serial.println("setupSensores");
-	//unsigned int sensorsQtd = (sizeof(digitalPinsSoilMoisture)/sizeof(int));
 	smm = new SoilMoistureManager(digitalPinsSoilMoisture, qtdSensores);
-	
-	// SensorUmidadeInit( qtdSensores, A0, VersaoDEMO);
 }
 
 void setup() 

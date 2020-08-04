@@ -3,7 +3,7 @@
 
 const bool EhDebug = true;
 const bool EhParaEnviarAoServidor = true;
-const bool VersaoDEMO = false;
+// const bool VersaoDEMO = false;
 const bool FormatHD = false;
 const bool ResetWIFI = false;
 const unsigned int TimeDelay = 5000;

@@ -29,7 +29,6 @@ void digitalClockDisplay()
  	struct tm timeinfo;
 	gmtime_r(&now, &timeinfo);
 	Serial.print(F("Current time: "));
-	
 	Serial.print(asctime(&timeinfo));
 	
 }
@@ -51,7 +50,7 @@ bool sincronizarRelogio() {
 	if (_debug) {
 		Serial.print(F("Setting time using SNTP"));
 	}
-	configTime(-3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
+	configTime(-3 * 3600, 0, "pool.ntp.org"); //, "time.nist.gov"
 	time_t now = time(nullptr);
 	uint8_t attempts = 0;
 	while (now < 8 * 3600 * 2 && attempts <= 5) {
