@@ -1,6 +1,10 @@
 #ifndef _Constantes_H_
 #define _Constantes_H_
 
+#ifndef IOTWEBCONF_CONFIG_USE_MDNS
+	#define IOTWEBCONF_CONFIG_USE_MDNS 1
+#endif
+
 const bool EhDebug = true;
 const bool EhParaEnviarAoServidor = true;
 // const bool VersaoDEMO = false;

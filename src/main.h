@@ -1,7 +1,6 @@
 #ifndef _MEU_MAIN_H_
 #define _MEU_MAIN_H_
 
-
 #include <CustomHtmlFormatProvider.h>
 #include <Constantes.h>
 #include <Ubidots.h>
@@ -90,7 +89,7 @@ String criarCardsResumo(){
 	s += criarCard("IP", WiFi.localIP().toString());
 	s += criarCard("Time Zone", timeZoneValue);
 	s += criarCard("Data/Hora", formatarDataHora(time(nullptr)));
-	Serial.println("Card resumo criado");
+	//Serial.println("Card resumo criado");
 	return s;
 }
 

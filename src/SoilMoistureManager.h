@@ -32,7 +32,7 @@ class SoilMoistureManager {
 
 			for(unsigned int i = 0; i< qtdSensores; i++){
 				SoilMoistureSensor s = SoilMoistureSensor();
-				s.setup(digitalPins[i]);
+				s.setup(digitalPins[i],3);
 				this->sensoresSolo.push_back(s);
 			}
 		}

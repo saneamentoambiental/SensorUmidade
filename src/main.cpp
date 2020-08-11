@@ -85,7 +85,8 @@ boolean formValidator()
 	Serial.println(valid);
 	return valid;
 }
-
+void connectWifi(const char* ssid, const char* password);
+void setupUbidots();
 void setupIotWebConf(){
 	
 	itoa(timeUbidots, timeUbidotsValue, 10);
@@ -104,10 +105,30 @@ void setupIotWebConf(){
 
 	iotWebConf.setConfigSavedCallback(&configSaved);
 	iotWebConf.setFormValidator(&formValidator);
-
+	iotWebConf.setWifiConnectionHandler(&connectWifi);
 	// -- Applying the new HTML format to IotWebConf.
 	iotWebConf.setHtmlFormatProvider(&customHtmlFormatProvider);
+	
 	iotWebConf.init();
+
+	if(! MDNS.isRunning() ){
+		if (!MDNS.begin(WiFi.hostname().c_str(), WiFi.localIP() )){
+	  		Serial.println("Error MDNS init!");
+		}
+		MDNS.addService("http", "tcp", 80);
+	}
+  
+}
+void connectWifi(const char* ssid, const char* password){
+	WiFi.hostname(iotWebConf.getThingName());
+	if( WiFi.begin(ssid, password) && ! ubidots )
+	//if( iotWebConf.getState() == IOTWEBCONF_STATE_ONLINE && ! ubidots )
+	{
+		sincronizarRelogio();
+		Serial.printf("Hostname = %s\n", WiFi.hostname().c_str());
+		debugMsg("Conectado!");		
+		setupUbidots();
+	}
 }
 
 void printStatusUbidots(){
@@ -139,9 +160,9 @@ void setupUbidots(){
 bool sendUbidots(){
 	unsigned success = 0;
 	for (unsigned i = 0 ; i < smm->getQtdSensors(); i++){
-		char sensor[20], sensorRawValue[20];
-		sprintf(sensor,"Sensor_%d", (i));
-		sprintf(sensorRawValue,"Sensor_%d_Raw", (i));
+		char sensor[40], sensorRawValue[40];
+		sprintf(sensor,"%s_S_%d", iotWebConf.getThingName(), (i));
+		sprintf(sensorRawValue,"%s_S_%d_Raw", iotWebConf.getThingName(),  (i));
 		SoilMoistureSensor s = smm->getSensores()[i];
 		float value = s.getMoistureValue();
 		float rawValue = s.getMoistureRawValue();
@@ -153,7 +174,7 @@ bool sendUbidots(){
 		Serial.printf("%s = %f [%f]\n", &sensor, value, rawValue);
 		if ( ubidots->wifiConnected() )
 		{
-			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()))
+			if ( ! EhParaEnviarAoServidor || ubidots->send("GPSA"))
 			{
 				success++;
 			}
@@ -211,7 +232,7 @@ void setup()
 	Serial.begin(9600);
 	Serial.println("Starting up...");
 	setupIotWebConf();
-
+	
 	// -- Set up required URL handlers on the web server.
 	server.on("/", handleRoot);
 	server.on("/config", []{ iotWebConf.handleConfig(); });
@@ -229,6 +250,8 @@ void setup()
 		sincronizarRelogio();
 	}
 	setupSensores();
+	
+	
 	Serial.println("Ready.");
 }
 
@@ -236,16 +259,7 @@ void loop()
 {
 	// -- doLoop should be called as frequently as possible.
 	iotWebConf.doLoop();
-	if( iotWebConf.getState() == IOTWEBCONF_STATE_ONLINE && ! ubidots )
-	{
-		sincronizarRelogio();
-		debugMsg("Conectado!");		
-		setupUbidots();
-	}
-	// if ( WiFi.isConnected()){
-	// 	sendUbidots();
-	// 	delay(5000);
-	// }
+	
 	currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
 	if (currentMillis - lastMilles >= (timeUbidots*1000))  //test whether the period has elapsed
 	{

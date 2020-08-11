@@ -24,11 +24,16 @@ float SoilMoistureSensor::getMoistureRawValue()
 	powerOn();
 	float media = 0;
 	for( unsigned int i = 0; i < this->readQtd; i++ ){
-		media += analogRead(this->analogPin);
-		delayMicroseconds(150);
+		int valor = analogRead(this->analogPin);
+		//Serial.println(valor);
+		media += valor;
+		delayMicroseconds(200);
 	}
 	powerOff();
-	return media/this->readQtd;
+	media = media/this->readQtd;
+	//Serial.println(media);
+
+	return media;
 }
 
 float SoilMoistureSensor::getMoistureValue(const unsigned int in_min, const unsigned int in_max ){

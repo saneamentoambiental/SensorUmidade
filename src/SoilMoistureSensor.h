@@ -34,7 +34,7 @@ class SoilMoistureSensor {
 	public:
 		SoilMoistureSensor();
 		void setup(int powerPin, unsigned int readQtd = 3U, unsigned int analogPin = A0);
-		float getMoistureValue(const unsigned int in_min = 0, const unsigned int in_max = 1024);
+		float getMoistureValue(const unsigned int in_min = 0, const unsigned int in_max = 1023);
 		float getMoistureRawValue();
 		SoilMoistureSensorStatus getStatus();
 		int getPowerPin(){
