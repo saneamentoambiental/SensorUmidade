@@ -84,13 +84,13 @@ loop(){
 
 ![Sensor GBK Robotics](docs/GBK_SensorSolo.png)
 
-Modelo 3D: https://www.thingiverse.com/thing:4567970
+- Fazer download do [case](https://www.thingiverse.com/thing:4567970) para impressora 3D.
 
 ### Sensor Higrômetro
 
 ![Sensor](docs/SensorSolo.png)
 
-Modelo 3D: https://www.thingiverse.com/thing:4562128
+- Fazer download do [case](https://www.thingiverse.com/thing:4562128) para impressora 3D.
 
 ---
 GPSA: Grupo de Saneamento Ambiental.
