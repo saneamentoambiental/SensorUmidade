@@ -4,7 +4,7 @@ Projeto monitorar a umidade de solo de vários recipientes através de sensores 
 
 ## Descrição
 
-O GPSA necessitava de um mecanismo para controlar a temperatura de recipientes de pesquisa envolvendo lodo (esgoto) e minhocas.
+O GPSA necessitava de um mecanismo para controlar a umidade de recipientes de pesquisa envolvendo solo e minhocas.
 
 Para atender a necessidade foi criado um sistema que envia para o servidor [ubidots] o valor dos sensores conectados no esp8266.
 O sistema aceita até 8 sensores, que são controlados através das portas digitais (ligando-os e desligando-os), e configurados através do portal.
