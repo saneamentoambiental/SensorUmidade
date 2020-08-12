@@ -59,9 +59,9 @@ boolean formValidator()
 
 	if( server.arg(qtdSensoresParam.getId()).length() > 0 ){
 		int qtd = atoi(server.arg(qtdSensoresParam.getId()).c_str());
-		if (qtd < 1 && qtd > 4)
+		if (qtd < 1 && qtd > 8)
 		{
-			qtdSensoresParam.errorMessage = "A quantidade de sensores deve ser entre 1 e 4.";
+			qtdSensoresParam.errorMessage = "A quantidade de sensores deve ser entre 1 e 8.";
 			valid = false;
 		}
 	}
@@ -111,12 +111,7 @@ void setupIotWebConf(){
 	
 	iotWebConf.init();
 
-	if(! MDNS.isRunning() ){
-		if (!MDNS.begin(WiFi.hostname().c_str(), WiFi.localIP() )){
-	  		Serial.println("Error MDNS init!");
-		}
-		MDNS.addService("http", "tcp", 80);
-	}
+	
   
 }
 void connectWifi(const char* ssid, const char* password){

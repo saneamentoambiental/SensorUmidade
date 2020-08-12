@@ -58,7 +58,7 @@ IotWebConfParameter timeUbidotsParam = IotWebConfParameter("Enviar a cada (seg)"
 IotWebConfSeparator separatorConfigGeral = IotWebConfSeparator("Configurações Gerais");
 char qtdSensoresValue[NUMBER_LEN];
 byte qtdSensores = 1;
-IotWebConfParameter qtdSensoresParam = IotWebConfParameter("Qtd Sensores", "qSGPSA", qtdSensoresValue, NUMBER_LEN, "number", "ex. 1", "1", "step='1' min='1' max='4'");
+IotWebConfParameter qtdSensoresParam = IotWebConfParameter("Qtd Sensores", "qSGPSA", qtdSensoresValue, NUMBER_LEN, "number", "ex. 1", "1", "step='1' min='1' max='8'");
 char timeZoneValue[STRING_LEN];
 // (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 IotWebConfParameter timeZoneParam = IotWebConfParameter("Time Zone", "tzGPSA", timeZoneValue, STRING_LEN, "text", "ex. America/Maceio", "America/Maceio");

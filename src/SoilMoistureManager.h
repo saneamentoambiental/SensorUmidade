@@ -21,9 +21,9 @@ class SoilMoistureManager {
 		}
 		SoilMoistureManager(int *digitalPins, unsigned int qtdSensores)
 		{
-			Serial.println("Constructor");
+			Serial.printf("Setup %d sensors...\n", qtdSensores);
 			
-			Serial.println(qtdSensores);
+			//Serial.println(qtdSensores);
 			this->qtdSensores = qtdSensores;
 			//sensoresSolo = new SoilMoistureSensor[qtdSensores];
 			Serial.println("Array - OK"); 
@@ -33,6 +33,7 @@ class SoilMoistureManager {
 			for(unsigned int i = 0; i< qtdSensores; i++){
 				SoilMoistureSensor s = SoilMoistureSensor();
 				s.setup(digitalPins[i],3);
+				Serial.printf("Sensor %d => port %d\n", i+1, digitalPins[i]);
 				this->sensoresSolo.push_back(s);
 			}
 		}
