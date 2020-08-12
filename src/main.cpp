@@ -163,7 +163,7 @@ bool sendUbidots(){
 		float rawValue = s.getMoistureRawValue();
 		if ( EhParaEnviarAoServidor )
 		{
-			ubidots->add(sensor, value);
+			//ubidots->add(sensor, value);
 			ubidots->add(sensorRawValue, rawValue);
 		} 
 		Serial.printf("%s = %f [%f]\n", &sensor, value, rawValue);

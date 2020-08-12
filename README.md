@@ -1,4 +1,4 @@
-# SensorUmidade
+# Sensor Umidade
 
 Projeto monitorar a umidade de solo de vários recipientes através de sensores capacitivos utilizando um único esp8266 controlador.
 
@@ -21,7 +21,11 @@ A solução faz uso da *lib* [IotWebConf](https://github.com/prampec/IotWebConf/
 
 A cada período (previamente cadastrada) as informações são enviadas para o servidor Ubidots. Para tal é necessário informar o token do usuário.
 
-Para cada sensor é enviado o valor RAW (como lido do sistema) e o percentual (tendo como faixa 0~1024).
+Para cada sensor é enviado o valor RAW (como lido do sistema) tendo como faixa 0~1023.
+
+Importante destacar que é preciso fazer a calibração de cada sensor utilizado. No nosso caso fizemos o teste com o solo seco, úmido e saturado. Com estes valores foram criados os gráficos no portal do Ubidots.
+
+![Dashboard Ubidots](docs/Dashboard.png)
 
 ### Conexões
 
@@ -74,5 +78,20 @@ loop(){
 }
 ```
 
+## Sensores testados
+
+### GBK 
+
+![Sensor GBK Robotics](docs/GBK_SensorSolo.png)
+
+Modelo 3D: https://www.thingiverse.com/thing:4567970
+
+### Sensor Higrômetro
+
+![Sensor](docs/SensorSolo.png)
+
+Modelo 3D: https://www.thingiverse.com/thing:4562128
+
 ---
 GPSA: Grupo de Saneamento Ambiental.
+
