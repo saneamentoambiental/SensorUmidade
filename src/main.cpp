@@ -92,7 +92,9 @@ void setupIotWebConf(){
 	itoa(timeUbidots, timeUbidotsValue, 10);
 	itoa(qtdSensores, qtdSensoresValue, 10);
 
+
 	//iotWebConf.setStatusPin(LED_BUILTIN);
+
 
 	iotWebConf.getWifiPasswordParameter()->type = "text";
 	iotWebConf.addParameter(&separatorUbidots);
@@ -169,7 +171,7 @@ bool sendUbidots(){
 		Serial.printf("%s = %f [%f]\n", &sensor, value, rawValue);
 		if ( ubidots->wifiConnected() )
 		{
-			if ( ! EhParaEnviarAoServidor || ubidots->send("GPSA"))
+			if ( ! EhParaEnviarAoServidor || ubidots->send(iotWebConf.getThingName()))
 			{
 				success++;
 			}

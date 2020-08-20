@@ -12,7 +12,7 @@
 
 #define STRING_LEN 128
 #define NUMBER_LEN 32
-#define CONFIG_VERSION "v5"
+#define CONFIG_VERSION "v2020.08.19.3"
 
 
 // -- Callback method declarations.
@@ -43,7 +43,7 @@ unsigned long currentMillis;
 Ubidots* ubidots;
 
 
-int digitalPinsSoilMoisture[] = {14,12,13,15, 2, 0, 4, 5};
+int digitalPinsSoilMoisture[] = {15,13,12,14,2, 0, 4, 5};
 SoilMoistureManager *smm;
 
 
